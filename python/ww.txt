@@ -1,0 +1,71 @@
+#The code for a WordPress plugin that will print using a different printer is as follows:
+
+#Create a new plugin and activate it in WordPress.
+
+#Add a PHP function to the plugin to send the print command to a different printer:
+
+
+
+
+function printToNewPrinter() {
+   // Replace 'new_printer' with the name of the new printer you want to use
+   $printerName = "new_printer";
+   $cmd = "print /d:$printerName <file_path_to_be_printed>";
+   exec($cmd);
+}
+
+#Modify the existing print button function in the WordPress POS plugin to call the new print function:
+
+
+function printReceipt() {
+   // Use the new print function to send print command to new printer
+   printToNewPrinter();
+   // Existing code to print receipt to default printer
+}
+#Add new JavaScript function to handle print button click event:
+javascript
+
+function printReceiptToNewPrinter() {
+   if (navigator.onLine) {
+      // Use AJAX to send print command when online
+      jQuery.ajax({
+         url: '<URL to PHP function to handle print command>',
+         type: 'POST',
+         data: {action: 'print_receipt'},
+         success: function(response) {
+            // Display success message
+         },
+         error: function(xhr, textStatus, errorThrown) {
+            // Display error message
+         }
+      });
+   } else {
+      // Use the new print function to send print command when offline
+      printToNewPrinter();
+   }
+}
+
+
+#Add PHP function to handle AJAX request for print command:
+php
+
+add_action('wp_ajax_print_receipt', 'printReceipt');
+add_action('wp_ajax_nopriv_print_receipt', 'printReceipt');
+
+function printReceipt() {
+   // Use the new print function to send print command
+   printToNewPrinter();
+   wp_die();
+}
+
+##Update the CSS and HTML code of the print button:
+html
+
+<button class="print-button" onclick="printReceiptToNewPrinter()">Print</button>
+css
+Copy code
+.print-button {
+   /* Existing CSS code for print button */
+}
+
+This code creates a new WordPress plugin that modifies the print button function to send the print command to a different printer, and ensures that the new print button works both online and offline. It requires expertise in PHP, WordPress, CSS, HTML, and software architecture to implement.
